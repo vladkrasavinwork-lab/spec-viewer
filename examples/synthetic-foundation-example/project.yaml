@@ -1,0 +1,30 @@
+schema_version: "1.0"
+project:
+  id: "PRJ-DEMO0001"
+  slug: "fictional-library"
+  name: "Fictional Library Catalog"
+  privacy: "private"
+  source_language: "en"
+  output_language: "en"
+status:
+  lifecycle: "created"
+  specification_readiness: null
+source:
+  original_file: null
+  normalized_file: null
+  source_hash: null
+  normalized_hash: null
+latest_runs:
+  review: null
+  rewrite: null
+  estimate: null
+latest_artifacts:
+  review_report: null
+  issue_register: null
+  revised_specification: null
+  estimate_report: null
+open_items:
+  critical_issues: 0
+  high_issues: 0
+  unanswered_blocking_questions: 0
+  unresolved_assumptions: 0

@@ -1,0 +1,22 @@
+schema_version: "1.0"
+run_id: "20260715T143000Z-review"
+project_id: "PRJ-TEMPLATE01"
+readiness: "NOT_READY"
+overall_confidence: "low"
+category_scores:
+  context_and_objectives: 0
+  scope: 0
+  stakeholders_and_actors: 0
+  functional_completeness: 0
+  requirement_clarity: 0
+  verifiability: 0
+  consistency: 0
+  edge_cases_and_failures: 0
+  non_functional_requirements: 0
+  delivery_readiness: 0
+issue_counts:
+  critical: 0
+  high: 0
+  medium: 0
+  low: 0
+blocking_question_count: 0

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "document_id", "title", "document_type", "source_format", "source_language", "normalized_language", "source_filename", "source_hash", "converted_at", "conversion_status", "converter_version", "warnings_count"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "document_id": {"type": "string", "pattern": "^DOC-[A-Z0-9-]{4,64}$"},
+    "title": {"type": "string", "minLength": 1}, "document_type": {"type": "string", "minLength": 1},
+    "source_format": {"enum": ["markdown", "docx", "text_pdf", "unknown"]}, "source_language": {"type": ["string", "null"]},
+    "normalized_language": {"type": ["string", "null"]}, "source_filename": {"type": ["string", "null"], "pattern": "^[^/\\\\]+$"},
+    "source_hash": {"type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$"}, "converted_at": {"type": ["string", "null"], "format": "date-time"},
+    "conversion_status": {"enum": ["not_started", "completed", "partial", "failed", "unsupported"]},
+    "converter_version": {"type": ["string", "null"]}, "warnings_count": {"type": "integer", "minimum": 0}
+  }
+}

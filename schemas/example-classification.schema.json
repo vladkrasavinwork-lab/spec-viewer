@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "data_classification", "sanitized", "contains_real_customer_data", "approved_for_repository"],
+  "properties": {"schema_version": {"const": "1.0"}, "data_classification": {"enum": ["public_synthetic", "public_sanitized"]}, "sanitized": {"const": true}, "contains_real_customer_data": {"const": false}, "approved_for_repository": {"const": true}}
+}

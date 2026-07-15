@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "issues"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-review$"},
+    "issues": {"type": "array", "items": {"$ref": "#/$defs/issue"}}
+  },
+  "$defs": {
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "severity", "confidence", "source", "problem", "impact", "resolution_strategy", "question_ids", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ISSUE-[0-9]{3,}$"},
+        "type": {"enum": ["missing_requirement", "ambiguous_requirement", "conflicting_requirement", "non_testable_requirement", "missing_acceptance_criteria", "undefined_actor", "undefined_business_rule", "missing_error_scenario", "missing_edge_case", "missing_non_functional_requirement", "missing_dependency", "missing_data_definition", "missing_integration_contract", "security_risk", "privacy_risk", "compliance_risk", "delivery_risk", "estimation_blocker", "conversion_uncertainty", "terminology_inconsistency", "scope_uncertainty"]},
+        "severity": {"enum": ["critical", "high", "medium", "low"]},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["section", "heading", "excerpt"],
+          "properties": {
+            "section": {"type": ["string", "null"]},
+            "heading": {"type": ["string", "null"]},
+            "excerpt": {"type": ["string", "null"], "maxLength": 500}
+          }
+        },
+        "problem": {"type": "string", "minLength": 1},
+        "impact": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "resolution_strategy": {"enum": ["editorial", "derived", "decision_required"]},
+        "question_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^Q-[0-9]{3,}$"}},
+        "status": {"enum": ["open", "resolved", "accepted", "superseded"]}
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+name: Bug report
+description: Report reproducible incorrect behavior without confidential data
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not paste private specifications, customer data, credentials, or secrets. Use a minimal synthetic reproduction."
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed behavior
+      description: Describe the problem using sanitized or synthetic inputs.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: SpecViewer version
+    validations:
+      required: true

@@ -1,0 +1,11 @@
+schema_version: "1.0"
+run_id: "20260715T143000Z-review"
+project_id: "PRJ-TEMPLATE01"
+skill_name: "product-spec-review"
+skill_version: "0.1.0-placeholder"
+methodology_version: "0.1.0-placeholder"
+input_hashes: {}
+generated_at: "2026-07-15T14:30:00Z"
+status: "pending"
+confidence: null
+error: null

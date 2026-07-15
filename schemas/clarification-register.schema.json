@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "questions"], "properties": {"schema_version": {"const": "1.0"}, "questions": {"type": "array", "items": {"$ref": "#/$defs/question"}}},
+  "$defs": {"question": {"type": "object", "additionalProperties": false, "required": ["id", "priority", "category", "question", "reason", "affected_requirements", "status", "answer", "answer_metadata"], "properties": {
+    "id": {"type": "string", "pattern": "^Q-[0-9]{3,}$"}, "priority": {"enum": ["blocking", "important", "optional"]}, "category": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1}, "affected_requirements": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "status": {"enum": ["open", "answered", "deferred", "cancelled", "superseded"]}, "answer": {"type": ["string", "null"]},
+    "answer_metadata": {"anyOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["answered_by", "answered_at"], "properties": {"answered_by": {"type": "string"}, "answered_at": {"type": "string", "format": "date-time"}}}]}
+  }}}
+}

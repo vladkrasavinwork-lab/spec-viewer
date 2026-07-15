@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://specviewer.local/schemas/project.schema.json",
+  "title": "SpecViewer project manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project", "status", "source", "latest_runs", "latest_artifacts", "open_items"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "project": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "slug", "name", "privacy", "source_language", "output_language"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^PRJ-[A-Z0-9]{8,32}$"},
+        "slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 64},
+        "name": {"type": "string", "minLength": 1, "maxLength": 200},
+        "privacy": {"const": "private"},
+        "source_language": {"type": ["string", "null"]},
+        "output_language": {"type": ["string", "null"]}
+      }
+    },
+    "status": {
+      "type": "object", "additionalProperties": false, "required": ["lifecycle", "specification_readiness"],
+      "properties": {
+        "lifecycle": {"enum": ["created", "normalized", "reviewed", "awaiting_answers", "ready_for_rewrite", "rewritten", "ready_for_estimation", "estimated", "archived"]},
+        "specification_readiness": {"type": ["string", "null"], "enum": ["NOT_READY", "DISCOVERY_REQUIRED", "READY_WITH_CONDITIONS", "IMPLEMENTATION_READY", null]}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["original_file", "normalized_file", "source_hash", "normalized_hash"],
+      "properties": {
+        "original_file": {"$ref": "#/$defs/nullablePath"}, "normalized_file": {"$ref": "#/$defs/nullablePath"},
+        "source_hash": {"$ref": "#/$defs/nullableHash"}, "normalized_hash": {"$ref": "#/$defs/nullableHash"}
+      }
+    },
+    "latest_runs": {"$ref": "#/$defs/runPointers"},
+    "latest_artifacts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["review_report", "issue_register", "revised_specification", "estimate_report"],
+      "properties": {"review_report": {"$ref": "#/$defs/nullablePath"}, "issue_register": {"$ref": "#/$defs/nullablePath"}, "revised_specification": {"$ref": "#/$defs/nullablePath"}, "estimate_report": {"$ref": "#/$defs/nullablePath"}}
+    },
+    "open_items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["critical_issues", "high_issues", "unanswered_blocking_questions", "unresolved_assumptions"],
+      "properties": {"critical_issues": {"type": "integer", "minimum": 0}, "high_issues": {"type": "integer", "minimum": 0}, "unanswered_blocking_questions": {"type": "integer", "minimum": 0}, "unresolved_assumptions": {"type": "integer", "minimum": 0}}
+    }
+  },
+  "$defs": {
+    "relativePath": {"type": "string", "minLength": 1, "pattern": "^(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"},
+    "nullablePath": {"anyOf": [{"$ref": "#/$defs/relativePath"}, {"type": "null"}]},
+    "nullableHash": {"type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$"},
+    "runPointers": {"type": "object", "additionalProperties": false, "required": ["review", "rewrite", "estimate"], "properties": {"review": {"$ref": "#/$defs/nullablePath"}, "rewrite": {"$ref": "#/$defs/nullablePath"}, "estimate": {"$ref": "#/$defs/nullablePath"}}}
+  }
+}

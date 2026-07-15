@@ -1,0 +1,13 @@
+schema_version: "1.0"
+document_id: "DOC-DEMO-001"
+title: "Fictional Library Catalog Specification"
+document_type: "product_specification"
+source_format: "markdown"
+source_language: "en"
+normalized_language: "en"
+source_filename: null
+source_hash: null
+converted_at: null
+conversion_status: "not_started"
+converter_version: null
+warnings_count: 0

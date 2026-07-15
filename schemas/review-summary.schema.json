@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "project_id", "readiness", "overall_confidence", "category_scores", "issue_counts", "blocking_question_count"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-review$"},
+    "project_id": {"type": "string", "pattern": "^PRJ-[A-Z0-9]{8,32}$"},
+    "readiness": {"enum": ["NOT_READY", "DISCOVERY_REQUIRED", "READY_WITH_CONDITIONS", "IMPLEMENTATION_READY"]},
+    "overall_confidence": {"enum": ["low", "medium", "high"]},
+    "category_scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context_and_objectives", "scope", "stakeholders_and_actors", "functional_completeness", "requirement_clarity", "verifiability", "consistency", "edge_cases_and_failures", "non_functional_requirements", "delivery_readiness"],
+      "properties": {
+        "context_and_objectives": {"type": "integer", "minimum": 0, "maximum": 5},
+        "scope": {"type": "integer", "minimum": 0, "maximum": 5},
+        "stakeholders_and_actors": {"type": "integer", "minimum": 0, "maximum": 5},
+        "functional_completeness": {"type": "integer", "minimum": 0, "maximum": 5},
+        "requirement_clarity": {"type": "integer", "minimum": 0, "maximum": 5},
+        "verifiability": {"type": "integer", "minimum": 0, "maximum": 5},
+        "consistency": {"type": "integer", "minimum": 0, "maximum": 5},
+        "edge_cases_and_failures": {"type": "integer", "minimum": 0, "maximum": 5},
+        "non_functional_requirements": {"type": "integer", "minimum": 0, "maximum": 5},
+        "delivery_readiness": {"type": "integer", "minimum": 0, "maximum": 5}
+      }
+    },
+    "issue_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "medium", "low"],
+      "properties": {
+        "critical": {"type": "integer", "minimum": 0},
+        "high": {"type": "integer", "minimum": 0},
+        "medium": {"type": "integer", "minimum": 0},
+        "low": {"type": "integer", "minimum": 0}
+      }
+    },
+    "blocking_question_count": {"type": "integer", "minimum": 0}
+  }
+}

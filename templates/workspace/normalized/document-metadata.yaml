@@ -1,0 +1,13 @@
+schema_version: "1.0"
+document_id: "DOC-TEMPLATE"
+title: "Uninitialized document"
+document_type: "product_specification"
+source_format: "unknown"
+source_language: null
+normalized_language: null
+source_filename: null
+source_hash: null
+converted_at: null
+conversion_status: "not_started"
+converter_version: null
+warnings_count: 0

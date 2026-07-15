@@ -1,0 +1,6 @@
+# Runtime dependencies. Keep in sync with pyproject.toml [project.dependencies].
+jsonschema[format]>=4.21,<5
+pypdf>=6.0,<7
+python-docx>=1.2,<2
+PyYAML>=6.0,<7
+typer>=0.12,<1

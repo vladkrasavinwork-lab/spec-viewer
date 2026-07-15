@@ -1,0 +1,24 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+.coverage
+coverage.xml
+htmlcov/
+.idea/
+.vscode/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Real project inputs and generated artifacts are private by default.
+workspaces/
+**/*_private/
+**/*_private/**
+**/*_private*

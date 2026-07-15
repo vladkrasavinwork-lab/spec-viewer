@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Spec Review"
+  short_description: "Audit specifications and produce review artifacts"
+  default_prompt: "Use $product-spec-review to audit this specification and create validated findings and clarification questions."

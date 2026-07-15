@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a capability without sharing private project data
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include confidential specifications, customer identities, credentials, or production data."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Explain the generic or synthetic use case.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+    validations:
+      required: true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Delivery Estimate"
+  short_description: "Estimate product delivery and operating costs"
+  default_prompt: "Use $product-delivery-estimate to estimate delivery from this reviewed specification."
