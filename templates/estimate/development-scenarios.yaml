@@ -1,0 +1,17 @@
+schema_version: "1.0"
+run_id: "20000101T000000Z-estimate"
+scenarios:
+  - id: "DEV-001"
+    name: "Baseline delivery"
+    description: "Human-led implementation without modeled AI acceleration."
+    team: ["team composition must be confirmed"]
+    calendar_weeks: {optimistic: 0, expected: 0, conservative: 0}
+    included_work_ids: []
+    exclusions: []
+  - id: "DEV-002"
+    name: "AI-assisted delivery"
+    description: "AI-assisted implementation with human review and rework overhead."
+    team: ["team composition must be confirmed"]
+    calendar_weeks: {optimistic: 0, expected: 0, conservative: 0}
+    included_work_ids: []
+    exclusions: []

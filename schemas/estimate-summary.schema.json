@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "run_id", "project_id", "readiness", "confidence", "blockers", "effort", "calendar", "development_cost", "main_uncertainties"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-estimate$"},
+    "project_id": {"type": "string", "pattern": "^PRJ-[A-Z0-9]{8,32}$"},
+    "readiness": {"enum": ["PRELIMINARY", "LOW_CONFIDENCE", "BLOCKED_BY_OPEN_DECISIONS", "READY_FOR_PLANNING"]},
+    "confidence": {"enum": ["low", "medium", "high"]},
+    "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "effort": {"type": "object", "additionalProperties": false, "required": ["baseline", "ai_assisted"], "properties": {"baseline": {"$ref": "#/$defs/effort"}, "ai_assisted": {"$ref": "#/$defs/effort"}}},
+    "calendar": {"type": "object", "additionalProperties": false, "required": ["optimistic_weeks", "expected_weeks", "conservative_weeks", "critical_path"], "properties": {"optimistic_weeks": {"type": "number", "minimum": 0}, "expected_weeks": {"type": "number", "minimum": 0}, "conservative_weeks": {"type": "number", "minimum": 0}, "critical_path": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^WORK-[0-9]{3,}$"}}}},
+    "development_cost": {"type": "object", "additionalProperties": false, "required": ["currency", "amount_range", "formula"], "properties": {"currency": {"type": ["string", "null"]}, "amount_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]}, "formula": {"type": "string", "minLength": 1}}},
+    "main_uncertainties": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "effort": {"type": "object", "additionalProperties": false, "required": ["optimistic_hours", "expected_hours", "conservative_hours"], "properties": {"optimistic_hours": {"type": "number", "minimum": 0}, "expected_hours": {"type": "number", "minimum": 0}, "conservative_hours": {"type": "number", "minimum": 0}}},
+    "range": {"type": "object", "additionalProperties": false, "required": ["minimum", "expected", "maximum"], "properties": {"minimum": {"type": "number", "minimum": 0}, "expected": {"type": "number", "minimum": 0}, "maximum": {"type": "number", "minimum": 0}}}
+  }
+}

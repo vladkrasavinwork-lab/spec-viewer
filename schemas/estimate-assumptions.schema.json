@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "run_id", "assumptions"], "properties": {
+    "schema_version": {"const": "1.0"}, "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-estimate$"},
+    "assumptions": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "statement", "basis", "impact", "sensitivity", "status", "owner"], "properties": {
+      "id": {"type": "string", "pattern": "^ASSUMPTION-EST-[0-9]{3,}$"}, "statement": {"type": "string", "minLength": 1}, "basis": {"type": "string", "minLength": 1}, "impact": {"type": "string", "minLength": 1}, "sensitivity": {"enum": ["low", "medium", "high"]}, "status": {"enum": ["unconfirmed", "confirmed", "rejected", "superseded"]}, "owner": {"type": ["string", "null"]}
+    }}}
+  }
+}

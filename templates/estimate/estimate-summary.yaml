@@ -1,0 +1,19 @@
+schema_version: "1.0"
+run_id: "20000101T000000Z-estimate"
+project_id: "PRJ-TEMPLATE01"
+readiness: "PRELIMINARY"
+confidence: "low"
+blockers: []
+effort:
+  baseline: {optimistic_hours: 0, expected_hours: 0, conservative_hours: 0}
+  ai_assisted: {optimistic_hours: 0, expected_hours: 0, conservative_hours: 0}
+calendar:
+  optimistic_weeks: 0
+  expected_weeks: 0
+  conservative_weeks: 0
+  critical_path: []
+development_cost:
+  currency: null
+  amount_range: null
+  formula: "sum(effort by discipline × provided rate); rates are not provided"
+main_uncertainties: []

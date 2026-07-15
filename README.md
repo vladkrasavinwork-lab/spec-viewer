@@ -2,15 +2,14 @@
 
 SpecViewer is a private-by-default repository for reproducible product-specification workflows.
 The current development version implements the repository foundation, Markdown/DOCX/text-PDF
-normalization, review, and traceable specification rewriting. Delivery estimation remains planned.
+normalization, review, traceable specification rewriting, and transparent delivery estimation.
 
-## Planned skills
+## Skills
 
 - `product-spec-review` audits specification quality and produces validated findings and questions.
 - `product-spec-rewrite` creates a traceable revision from confirmed inputs and explicit assumptions.
-- `product-delivery-estimate` estimates delivery and operating scenarios (future stage).
-
-The estimate directory remains an explicit placeholder and is not a production workflow yet.
+- `product-delivery-estimate` estimates delivery effort, schedule, cost formulas, infrastructure,
+  and support scenarios without inventing rates or prices.
 
 ## Repository map
 
@@ -53,6 +52,11 @@ python -m spec_viewer review finalize workspaces/customer-portal_private workspa
 python -m spec_viewer rewrite prepare workspaces/customer-portal_private --mode conservative
 # Use the product-spec-rewrite skill to populate the printed run directory.
 python -m spec_viewer rewrite finalize workspaces/customer-portal_private workspaces/customer-portal_private/artifacts/rewrite/<run-id>
+# Add confirmed team, rates, load, infrastructure, AI usage, and support inputs when available.
+# Missing inputs remain explicit uncertainties; the skill never invents rates or provider prices.
+python -m spec_viewer estimate prepare workspaces/customer-portal_private
+# Use the product-delivery-estimate skill to populate the printed run directory.
+python -m spec_viewer estimate finalize workspaces/customer-portal_private workspaces/customer-portal_private/artifacts/estimate/<run-id>
 python -m spec_viewer schema validate schemas/project.schema.json path/to/project.yaml
 python -m spec_viewer repository validate
 python -m spec_viewer privacy check
@@ -62,11 +66,12 @@ python -m spec_viewer privacy check
 Workspace initialization creates `workspaces/customer-portal_private` and prints that relative path.
 All validation is offline. `scripts/check.sh` runs the same quality gates as CI.
 
-## Roadmap
+## Implementation status
 
 1. Repository Foundation — implemented.
 2. Review Skill — implemented for the first review vertical slice.
 3. Rewrite Skill — implemented with blocking-question and traceability validation.
-4. Delivery Estimate Skill.
-5. Workspace Lifecycle and Normalization.
-6. End-to-End Validation.
+4. Delivery Estimate Skill — implemented with scenario and pricing-provenance validation.
+5. Workspace Lifecycle and Normalization — implemented.
+6. End-to-End Validation — the review → rewrite → estimate workflow is covered by deterministic
+   tests and has been exercised on a private workspace; broader eval automation remains planned.

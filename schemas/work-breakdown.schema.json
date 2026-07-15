@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "run_id", "work_items"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-estimate$"},
+    "work_items": {"type": "array", "items": {"$ref": "#/$defs/item"}}
+  },
+  "$defs": {
+    "effort": {"type": "object", "additionalProperties": false, "required": ["optimistic_hours", "expected_hours", "conservative_hours"], "properties": {"optimistic_hours": {"type": "number", "minimum": 0}, "expected_hours": {"type": "number", "minimum": 0}, "conservative_hours": {"type": "number", "minimum": 0}}},
+    "item": {"type": "object", "additionalProperties": false, "required": ["id", "title", "requirement_ids", "issue_ids", "disciplines", "complexity", "baseline_effort", "ai_assisted_effort", "ai_assistance", "confidence", "assumption_ids", "dependencies"], "properties": {
+      "id": {"type": "string", "pattern": "^WORK-[0-9]{3,}$"}, "title": {"type": "string", "minLength": 1},
+      "requirement_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^(REQ|NFR)-[A-Z0-9]+-[0-9]{3,}$"}},
+      "issue_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^ISSUE-[0-9]{3,}$"}},
+      "disciplines": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["discovery", "product", "ux_ui", "architecture", "frontend", "backend", "mobile", "data", "qa", "security", "devops", "documentation", "project_management"]}},
+      "complexity": {"enum": ["low", "medium", "high"]}, "baseline_effort": {"$ref": "#/$defs/effort"}, "ai_assisted_effort": {"$ref": "#/$defs/effort"},
+      "ai_assistance": {"type": "object", "additionalProperties": false, "required": ["applicability", "expected_acceleration", "human_review_required", "review_overhead", "rework_risk"], "properties": {"applicability": {"enum": ["none", "low", "medium", "high"]}, "expected_acceleration": {"enum": ["none", "low", "moderate", "high"]}, "human_review_required": {"type": "boolean"}, "review_overhead": {"enum": ["low", "medium", "high"]}, "rework_risk": {"enum": ["low", "medium", "high"]}}},
+      "confidence": {"enum": ["low", "medium", "high"]}, "assumption_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^ASSUMPTION-EST-[0-9]{3,}$"}}, "dependencies": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^WORK-[0-9]{3,}$"}}
+    }}
+  }
+}

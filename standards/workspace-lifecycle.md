@@ -10,3 +10,5 @@ Workspace initialization creates `created`; normalization advances to `normalize
 review advances to `reviewed` or `awaiting_answers` when blocking questions remain.
 A completed rewrite with no unanswered blocking questions advances to `rewritten` and updates only
 the current rewrite pointers; previous runs remain immutable.
+A completed estimate advances to `estimated`, records the report pointer, and preserves the hashed
+specification, issue register, and estimation inputs used by the run.

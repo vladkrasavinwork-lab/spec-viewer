@@ -6,3 +6,5 @@ symlink safety are additionally enforced by the CLI because schemas cannot resol
 
 Review schemas define category scoring, readiness, evidence-backed issues, and clarification data.
 Rewrite schemas define change provenance, explicit assumptions, and requirement-level traceability.
+Estimate schemas define readiness, work-item effort, AI impact, delivery scenarios, provider-neutral
+infrastructure, support levels, assumptions, and monetary-value provenance.

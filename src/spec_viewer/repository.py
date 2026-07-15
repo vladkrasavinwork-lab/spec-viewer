@@ -29,6 +29,21 @@ STRUCTURED_FILES = (
         "schemas/requirement-traceability.schema.json",
         "templates/rewrite/requirement-traceability.yaml",
     ),
+    ("schemas/estimate-summary.schema.json", "templates/estimate/estimate-summary.yaml"),
+    ("schemas/work-breakdown.schema.json", "templates/estimate/work-breakdown.yaml"),
+    (
+        "schemas/estimate-assumptions.schema.json",
+        "templates/estimate/estimate-assumptions.yaml",
+    ),
+    (
+        "schemas/development-scenarios.schema.json",
+        "templates/estimate/development-scenarios.yaml",
+    ),
+    (
+        "schemas/infrastructure-scenarios.schema.json",
+        "templates/estimate/infrastructure-scenarios.yaml",
+    ),
+    ("schemas/support-model.schema.json", "templates/estimate/support-model.yaml"),
     ("schemas/example-classification.schema.json", "templates/examples/classification.yaml"),
     (
         "schemas/example-classification.schema.json",
@@ -67,7 +82,7 @@ def validate_repository(repository_root: Path) -> None:
     for skill in SKILLS:
         validate_skill_frontmatter(
             repository_root / ".agents/skills" / skill / "SKILL.md",
-            require_placeholder=skill == "product-delivery-estimate",
+            require_placeholder=False,
         )
     examples = [path for path in (repository_root / "examples").iterdir() if path.is_dir()]
     for example in examples:

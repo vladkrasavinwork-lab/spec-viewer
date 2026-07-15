@@ -1,0 +1,23 @@
+schema_version: "1.0"
+run_id: "20000101T000000Z-estimate"
+selected_level: null
+currency: null
+levels:
+  - name: "light"
+    coverage: ["best-effort support", "planned dependency updates"]
+    engineering_hours_range: {minimum: 0, expected: 0, maximum: 0}
+    engineering_cost_range: null
+    infrastructure_excluded: true
+    formula: "monthly engineering hours × provided discipline rates"
+  - name: "standard"
+    coverage: ["monitoring", "bug-fix reserve", "planned releases"]
+    engineering_hours_range: {minimum: 0, expected: 0, maximum: 0}
+    engineering_cost_range: null
+    infrastructure_excluded: true
+    formula: "monthly engineering hours × provided discipline rates"
+  - name: "critical"
+    coverage: ["on-call", "incident reserve", "disaster recovery exercises"]
+    engineering_hours_range: {minimum: 0, expected: 0, maximum: 0}
+    engineering_cost_range: null
+    infrastructure_excluded: true
+    formula: "monthly engineering hours × provided discipline rates"

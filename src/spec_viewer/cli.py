@@ -8,6 +8,7 @@ from pathlib import Path
 import typer
 
 from .errors import SpecViewerError
+from .estimate import finalize_estimate, prepare_estimate
 from .normalization import normalize_document
 from .privacy import privacy_check
 from .repository import validate_repository
@@ -26,6 +27,7 @@ privacy_app = typer.Typer(help="Check tracked paths and probable secrets.")
 document_app = typer.Typer(help="Normalize source documents.")
 review_app = typer.Typer(help="Prepare and finalize specification review runs.")
 rewrite_app = typer.Typer(help="Prepare and finalize traceable specification rewrites.")
+estimate_app = typer.Typer(help="Prepare and finalize transparent delivery estimates.")
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(run_app, name="run")
 app.add_typer(schema_app, name="schema")
@@ -34,6 +36,7 @@ app.add_typer(privacy_app, name="privacy")
 app.add_typer(document_app, name="document")
 app.add_typer(review_app, name="review")
 app.add_typer(rewrite_app, name="rewrite")
+app.add_typer(estimate_app, name="estimate")
 
 
 def _root() -> Path:
@@ -118,6 +121,18 @@ def rewrite_prepare(
 def rewrite_finalize(workspace: Path, run: Path) -> None:
     """Validate and complete an AI-authored specification rewrite."""
     _run(lambda: finalize_rewrite(workspace.resolve(), run.resolve(), _root()))
+
+
+@estimate_app.command("prepare")
+def estimate_prepare(workspace: Path, run_id: str | None = None) -> None:
+    """Create a running estimate with schema-valid artifact templates."""
+    _run(lambda: prepare_estimate(workspace.resolve(), _root(), run_id))
+
+
+@estimate_app.command("finalize")
+def estimate_finalize(workspace: Path, run: Path) -> None:
+    """Validate and complete an AI-authored delivery estimate."""
+    _run(lambda: finalize_estimate(workspace.resolve(), run.resolve(), _root()))
 
 
 if __name__ == "__main__":

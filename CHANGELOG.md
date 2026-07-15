@@ -11,6 +11,8 @@ versioning.
 - Working `product-spec-review` skill, review schemas, templates, lifecycle commands, and tests.
 - Working `product-spec-rewrite` skill with three modes, provenance, blocking-question enforcement,
   immutable runs, change/assumption/traceability schemas, templates, and tests.
+- Working `product-delivery-estimate` skill with three-point work breakdowns, per-item AI impact,
+  calendar and operating scenarios, pricing guardrails, immutable runs, schemas, and tests.
 - Public synthetic workspace example under `examples/`; real `workspaces/` remain ignored.
 
 ### Changed

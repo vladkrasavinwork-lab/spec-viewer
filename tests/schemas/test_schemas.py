@@ -23,6 +23,15 @@ CASES = (
         "requirement-traceability.schema.json",
         "templates/rewrite/requirement-traceability.yaml",
     ),
+    ("estimate-summary.schema.json", "templates/estimate/estimate-summary.yaml"),
+    ("work-breakdown.schema.json", "templates/estimate/work-breakdown.yaml"),
+    ("estimate-assumptions.schema.json", "templates/estimate/estimate-assumptions.yaml"),
+    ("development-scenarios.schema.json", "templates/estimate/development-scenarios.yaml"),
+    (
+        "infrastructure-scenarios.schema.json",
+        "templates/estimate/infrastructure-scenarios.yaml",
+    ),
+    ("support-model.schema.json", "templates/estimate/support-model.yaml"),
     ("example-classification.schema.json", "templates/examples/classification.yaml"),
 )
 

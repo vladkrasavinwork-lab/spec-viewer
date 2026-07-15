@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "mode", "currency", "scenarios"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-estimate$"},
+    "mode": {"enum": ["provider_neutral", "provider_specific"]},
+    "currency": {"type": ["string", "null"]},
+    "scenarios": {
+      "type": "array", "minItems": 4,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["name", "load_assumption", "resources", "monthly_total_range"],
+        "properties": {
+          "name": {"enum": ["prototype", "small_production", "expected_production", "high_growth_production"]},
+          "load_assumption": {"type": "string", "minLength": 1},
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["category", "quantity", "unit", "formula", "amount_range", "price_source", "price_date"],
+              "properties": {
+                "category": {"type": "string", "minLength": 1},
+                "quantity": {"type": ["number", "string"]},
+                "unit": {"type": "string", "minLength": 1},
+                "formula": {"type": "string", "minLength": 1},
+                "amount_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]},
+                "price_source": {"type": ["string", "null"]},
+                "price_date": {"type": ["string", "null"], "format": "date"}
+              }
+            }
+          },
+          "monthly_total_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "range": {
+      "type": "object", "additionalProperties": false,
+      "required": ["minimum", "expected", "maximum"],
+      "properties": {
+        "minimum": {"type": "number", "minimum": 0},
+        "expected": {"type": "number", "minimum": 0},
+        "maximum": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}
