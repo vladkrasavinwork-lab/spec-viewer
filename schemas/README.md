@@ -8,3 +8,5 @@ Review schemas define category scoring, readiness, evidence-backed issues, and c
 Rewrite schemas define change provenance, explicit assumptions, and requirement-level traceability.
 Estimate schemas define readiness, work-item effort, AI impact, delivery scenarios, provider-neutral
 infrastructure, support levels, assumptions, and monetary-value provenance.
+Cost-profile schemas define dated development rates, provider price units, and selected tool
+subscriptions. Reference profiles are immutable inputs within a run and must be refreshed explicitly.

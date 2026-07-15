@@ -16,7 +16,7 @@ normalization, review, traceable specification rewriting, and transparent delive
 - `src/spec_viewer/`: deterministic CLI and filesystem logic.
 - `schemas/` and `templates/`: machine contracts and safe starting artifacts.
 - `standards/`: lifecycle, privacy, IDs, canonical document, and versioning rules.
-- `profiles/`: reserved product, team, and operations profiles.
+- `profiles/`: versioned product, team-cost, infrastructure-price, and subscription profiles.
 - `examples/`: explicitly classified public examples only.
 - `tests/` and `evals/`: deterministic foundation verification.
 - `workspaces/`: ignored private project data, created on demand.
@@ -54,6 +54,7 @@ python -m spec_viewer rewrite prepare workspaces/customer-portal_private --mode 
 python -m spec_viewer rewrite finalize workspaces/customer-portal_private workspaces/customer-portal_private/artifacts/rewrite/<run-id>
 # Add confirmed team, rates, load, infrastructure, AI usage, and support inputs when available.
 # Missing inputs remain explicit uncertainties; the skill never invents rates or provider prices.
+# Optional cost-profile paths below profiles/ can be set in context/estimation-inputs.yaml.
 python -m spec_viewer estimate prepare workspaces/customer-portal_private
 # Use the product-delivery-estimate skill to populate the printed run directory.
 python -m spec_viewer estimate finalize workspaces/customer-portal_private workspaces/customer-portal_private/artifacts/estimate/<run-id>
@@ -65,6 +66,14 @@ python -m spec_viewer privacy check
 
 Workspace initialization creates `workspaces/customer-portal_private` and prints that relative path.
 All validation is offline. `scripts/check.sh` runs the same quality gates as CI.
+
+## Reference cost profiles
+
+The repository includes dated, editable examples for Russian loaded team rates, Yandex Cloud prices,
+and AI-development subscriptions. Configure their relative paths under `cost_profiles` in the
+workspace estimation inputs. Profiles are hash-pinned per run and rejected after `valid_until`.
+They are planning inputs, not salary offers or provider quotations. Different currencies remain
+separate unless the workspace supplies a dated exchange rate and source.
 
 ## Implementation status
 

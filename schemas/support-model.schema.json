@@ -7,6 +7,7 @@
     "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-estimate$"},
     "selected_level": {"type": ["string", "null"], "enum": ["light", "standard", "critical", null]},
     "currency": {"type": ["string", "null"]},
+    "rates_profile_id": {"type": ["string", "null"]},
     "levels": {
       "type": "array", "minItems": 3,
       "items": {

@@ -44,6 +44,18 @@ STRUCTURED_FILES = (
         "templates/estimate/infrastructure-scenarios.yaml",
     ),
     ("schemas/support-model.schema.json", "templates/estimate/support-model.yaml"),
+    (
+        "schemas/development-rates-profile.schema.json",
+        "profiles/team/russia-standard-2026.yaml",
+    ),
+    (
+        "schemas/infrastructure-prices-profile.schema.json",
+        "profiles/operations/yandex-cloud-russia-2026.yaml",
+    ),
+    (
+        "schemas/tool-subscriptions-profile.schema.json",
+        "profiles/operations/ai-development-subscriptions-2026.yaml",
+    ),
     ("schemas/example-classification.schema.json", "templates/examples/classification.yaml"),
     (
         "schemas/example-classification.schema.json",

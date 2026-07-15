@@ -2,6 +2,7 @@ schema_version: "1.0"
 run_id: "20000101T000000Z-estimate"
 selected_level: null
 currency: null
+rates_profile_id: null
 levels:
   - name: "light"
     coverage: ["best-effort support", "planned dependency updates"]

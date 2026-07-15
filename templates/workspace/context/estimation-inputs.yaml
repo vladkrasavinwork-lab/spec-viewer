@@ -5,3 +5,7 @@ ai_usage: null
 expected_load: null
 infrastructure_preference: null
 support_level: null
+cost_profiles:
+  development_rates: null
+  infrastructure_prices: null
+  tool_subscriptions: null

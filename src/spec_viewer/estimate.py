@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import shutil
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -36,6 +37,11 @@ SCHEMA_PAIRS = (
     ("support-model.schema.json", "support-model.yaml"),
     ("run-metadata.schema.json", "run-metadata.yaml"),
 )
+PROFILE_SCHEMAS = {
+    "development_rates": "development-rates-profile.schema.json",
+    "infrastructure_prices": "infrastructure-prices-profile.schema.json",
+    "tool_subscriptions": "tool-subscriptions-profile.schema.json",
+}
 
 
 def _safe_run(workspace: Path, run_path: Path) -> Path:
@@ -51,6 +57,38 @@ def _estimate_inputs(workspace: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise SpecViewerError("Estimation inputs must be a YAML mapping.")
     return data
+
+
+def _cost_profiles(
+    workspace: Path, repository_root: Path
+) -> dict[str, tuple[Path, dict[str, Any]]]:
+    inputs = _estimate_inputs(workspace)
+    configured = inputs.get("cost_profiles") or {}
+    if not isinstance(configured, dict):
+        raise SpecViewerError("cost_profiles must be a mapping of supported profile paths.")
+    unknown = set(configured) - set(PROFILE_SCHEMAS)
+    if unknown:
+        raise SpecViewerError("Unknown cost profile types: " + ", ".join(sorted(unknown)))
+    profile_root = (repository_root / "profiles").resolve()
+    loaded: dict[str, tuple[Path, dict[str, Any]]] = {}
+    for name, schema_name in PROFILE_SCHEMAS.items():
+        relative = configured.get(name)
+        if relative is None:
+            continue
+        if not isinstance(relative, str) or not relative:
+            raise SpecViewerError(f"Invalid {name} profile path.")
+        path = (repository_root / relative).resolve()
+        if not path.is_relative_to(profile_root) or path.is_symlink() or not path.is_file():
+            raise SpecViewerError(
+                f"Cost profile must be a regular file below profiles/: {relative}"
+            )
+        validate_file(repository_root / "schemas" / schema_name, path)
+        data = load_document(path)
+        valid_until = datetime.fromisoformat(data["valid_until"]).date()
+        if valid_until < datetime.now(UTC).date():
+            raise SpecViewerError(f"Cost profile has expired: {relative}")
+        loaded[name] = (path, data)
+    return loaded
 
 
 def _input_paths(workspace: Path) -> tuple[Path, Path, Path]:
@@ -107,12 +145,14 @@ def prepare_estimate(workspace: Path, repository_root: Path, run_id: str | None 
     metadata = load_document(metadata_path)
     metadata["status"] = "running"
     metadata["skill_version"] = "0.4.0"
-    metadata["methodology_version"] = "1.0"
+    metadata["methodology_version"] = "1.1"
     metadata["input_hashes"] = {
         "specification": sha256_file(specification),
         "issue_register": sha256_file(issues),
         "estimation_inputs": sha256_file(inputs),
     }
+    for name, (path, _) in _cost_profiles(workspace, repository_root).items():
+        metadata["input_hashes"][f"cost_profile_{name}"] = sha256_file(path)
     atomic_yaml_write(
         metadata_path,
         metadata,
@@ -160,6 +200,14 @@ def _sum_effort(items: list[dict[str, Any]], key: str) -> dict[str, float]:
 def _assert_ordered(values: dict[str, Any], keys: tuple[str, str, str], label: str) -> None:
     if not float(values[keys[0]]) <= float(values[keys[1]]) <= float(values[keys[2]]):
         raise SpecViewerError(f"{label} range must be ordered from optimistic to conservative.")
+
+
+def _expected_cost_range(effort: dict[str, Any], hourly_rate: float) -> dict[str, float]:
+    return {
+        "minimum": round(float(effort["optimistic_hours"]) * hourly_rate, 2),
+        "expected": round(float(effort["expected_hours"]) * hourly_rate, 2),
+        "maximum": round(float(effort["conservative_hours"]) * hourly_rate, 2),
+    }
 
 
 def finalize_estimate(workspace: Path, run_path: Path, repository_root: Path) -> None:
@@ -239,9 +287,22 @@ def finalize_estimate(workspace: Path, run_path: Path, repository_root: Path) ->
     if support_names != {"light", "standard", "critical"}:
         raise SpecViewerError("Support model must contain light, standard, and critical levels.")
     inputs = _estimate_inputs(workspace)
-    rates_provided = bool(inputs.get("rates"))
+    profiles = _cost_profiles(workspace, repository_root)
+    rates_profile = profiles.get("development_rates")
+    rates_provided = bool(inputs.get("rates")) or rates_profile is not None
     if not rates_provided and summary["development_cost"]["amount_range"] is not None:
         raise SpecViewerError("Development cost cannot be stated when rates are not provided.")
+    if rates_profile:
+        _, rates_data = rates_profile
+        expected_cost = _expected_cost_range(
+            summary["effort"]["ai_assisted"], float(rates_data["blended_hourly_rate"])
+        )
+        if summary["development_cost"].get("profile_id") != rates_data["profile_id"]:
+            raise SpecViewerError("Development cost must identify the selected rates profile.")
+        if summary["development_cost"]["currency"] != rates_data["currency"]:
+            raise SpecViewerError("Development cost currency does not match the rates profile.")
+        if summary["development_cost"]["amount_range"] != expected_cost:
+            raise SpecViewerError("Development cost does not match effort × blended profile rate.")
     priced_resources = [
         resource
         for scenario in infrastructure["scenarios"]
@@ -252,10 +313,95 @@ def finalize_estimate(workspace: Path, run_path: Path, repository_root: Path) ->
         resource["price_source"] and resource["price_date"] for resource in priced_resources
     ):
         raise SpecViewerError("Every infrastructure price requires a source and retrieval date.")
+    infrastructure_profile = profiles.get("infrastructure_prices")
+    if infrastructure_profile:
+        _, infrastructure_data = infrastructure_profile
+        if infrastructure.get("profile_id") != infrastructure_data["profile_id"]:
+            raise SpecViewerError(
+                "Infrastructure scenarios must identify the selected price profile."
+            )
+        if infrastructure["currency"] != infrastructure_data["currency"]:
+            raise SpecViewerError("Infrastructure currency does not match the price profile.")
+        prices = {price["id"]: price for price in infrastructure_data["prices"]}
+        for resource in priced_resources:
+            price = prices.get(resource.get("price_id"))
+            if price is None:
+                raise SpecViewerError(
+                    "Priced infrastructure resource has no known profile price ID."
+                )
+            if resource["price_source"] != price["source_url"]:
+                raise SpecViewerError("Infrastructure source does not match the selected profile.")
+            if resource["price_date"] != price["source_date"]:
+                raise SpecViewerError(
+                    "Infrastructure price date does not match the selected profile."
+                )
+            if resource["unit"] != price["unit"]:
+                raise SpecViewerError(
+                    "Infrastructure unit does not match the selected profile price."
+                )
+            if isinstance(resource["quantity"], (int, float)):
+                expected_amount = round(float(resource["quantity"]) * float(price["unit_price"]), 2)
+                if any(
+                    float(resource["amount_range"][key]) != expected_amount
+                    for key in ("minimum", "expected", "maximum")
+                ):
+                    raise SpecViewerError(
+                        "Infrastructure amount does not match quantity × profile unit price."
+                    )
+        for scenario in infrastructure["scenarios"]:
+            priced = [
+                resource
+                for resource in scenario["resources"]
+                if resource["amount_range"] is not None
+            ]
+            expected_total = {
+                key: round(sum(float(resource["amount_range"][key]) for resource in priced), 2)
+                for key in ("minimum", "expected", "maximum")
+            }
+            if priced and scenario["monthly_total_range"] != expected_total:
+                raise SpecViewerError(
+                    "Infrastructure scenario total must equal its priced resource subtotal."
+                )
     if not rates_provided and any(
         level["engineering_cost_range"] is not None for level in support["levels"]
     ):
         raise SpecViewerError("Engineering support cost cannot be stated without rates.")
+    if rates_profile:
+        _, rates_data = rates_profile
+        if support.get("rates_profile_id") != rates_data["profile_id"]:
+            raise SpecViewerError("Support model must identify the selected rates profile.")
+        if support["currency"] != rates_data["currency"]:
+            raise SpecViewerError("Support currency does not match the rates profile.")
+        for level in support["levels"]:
+            expected_support = {
+                key: round(
+                    float(level["engineering_hours_range"][key])
+                    * float(rates_data["blended_hourly_rate"]),
+                    2,
+                )
+                for key in ("minimum", "expected", "maximum")
+            }
+            if level["engineering_cost_range"] != expected_support:
+                raise SpecViewerError("Support cost does not match hours × blended profile rate.")
+    subscription_profile = profiles.get("tool_subscriptions")
+    if subscription_profile:
+        _, subscription_data = subscription_profile
+        tooling = summary.get("tooling_cost")
+        if not tooling or tooling["profile_id"] != subscription_data["profile_id"]:
+            raise SpecViewerError("Tooling cost must identify the selected subscription profile.")
+        if tooling["currency"] != subscription_data["currency"]:
+            raise SpecViewerError("Tooling currency does not match the subscription profile.")
+        monthly = round(
+            sum(
+                float(item["unit_price"]) * float(item["default_quantity"])
+                for item in subscription_data["subscriptions"]
+                if item["selected"]
+            ),
+            2,
+        )
+        expected_tooling = {"minimum": monthly, "expected": monthly, "maximum": monthly}
+        if tooling["monthly_amount_range"] != expected_tooling:
+            raise SpecViewerError("Tooling cost does not match selected profile subscriptions.")
     for markdown_name in ("estimate-report.md", "open-estimation-questions.md"):
         if len((run_path / markdown_name).read_text(encoding="utf-8").strip()) < 20:
             raise SpecViewerError(f"Estimate artifact is empty: {markdown_name}")
@@ -265,6 +411,9 @@ def finalize_estimate(workspace: Path, run_path: Path, repository_root: Path) ->
         raise SpecViewerError("Review issues changed after the estimate run started.")
     if metadata["input_hashes"]["estimation_inputs"] != sha256_file(inputs_path):
         raise SpecViewerError("Estimation inputs changed after the estimate run started.")
+    for name, (path, _) in profiles.items():
+        if metadata["input_hashes"].get(f"cost_profile_{name}") != sha256_file(path):
+            raise SpecViewerError(f"Cost profile changed after the estimate run started: {name}")
     metadata["status"] = "completed"
     metadata["confidence"] = summary["confidence"]
     atomic_yaml_write(

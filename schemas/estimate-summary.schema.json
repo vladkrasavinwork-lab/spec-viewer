@@ -11,7 +11,8 @@
     "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
     "effort": {"type": "object", "additionalProperties": false, "required": ["baseline", "ai_assisted"], "properties": {"baseline": {"$ref": "#/$defs/effort"}, "ai_assisted": {"$ref": "#/$defs/effort"}}},
     "calendar": {"type": "object", "additionalProperties": false, "required": ["optimistic_weeks", "expected_weeks", "conservative_weeks", "critical_path"], "properties": {"optimistic_weeks": {"type": "number", "minimum": 0}, "expected_weeks": {"type": "number", "minimum": 0}, "conservative_weeks": {"type": "number", "minimum": 0}, "critical_path": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^WORK-[0-9]{3,}$"}}}},
-    "development_cost": {"type": "object", "additionalProperties": false, "required": ["currency", "amount_range", "formula"], "properties": {"currency": {"type": ["string", "null"]}, "amount_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]}, "formula": {"type": "string", "minLength": 1}}},
+    "development_cost": {"type": "object", "additionalProperties": false, "required": ["currency", "amount_range", "formula"], "properties": {"currency": {"type": ["string", "null"]}, "profile_id": {"type": ["string", "null"]}, "amount_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]}, "formula": {"type": "string", "minLength": 1}}},
+    "tooling_cost": {"type": "object", "additionalProperties": false, "required": ["currency", "profile_id", "monthly_amount_range", "formula"], "properties": {"currency": {"type": ["string", "null"]}, "profile_id": {"type": ["string", "null"]}, "monthly_amount_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]}, "formula": {"type": "string", "minLength": 1}}},
     "main_uncertainties": {"type": "array", "items": {"type": "string", "minLength": 1}}
   },
   "$defs": {

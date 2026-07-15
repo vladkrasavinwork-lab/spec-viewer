@@ -8,6 +8,9 @@ Default to provider-neutral quantities, units, and formulas. When load is unknow
 parameters instead of guessing actual traffic. A provider-specific amount requires provider/tariff
 source, retrieval date, region, and currency in the report and structured resource entry.
 
+When `cost_profiles.infrastructure_prices` is configured, use only matching `price_id` entries and
+copy their exact source URL and source date. Leave missing resource categories parametric.
+
 Keep infrastructure and third-party spend separate from engineering support. Show light, standard,
 and critical support levels. Calculate engineering support cost only from supplied rates. Keep
 feature capacity visible rather than hiding it inside incident support.

@@ -1,0 +1,27 @@
+schema_version: "1.0"
+profile_id: "russia-standard-2026"
+currency: "RUB"
+region: "Russia / remote"
+retrieved_at: "2026-07-16"
+valid_until: "2026-08-16"
+cost_basis: "loaded_internal_cost"
+methodology:
+  salary_source_url: "https://career.habr.com/salaries"
+  salary_source_note: "Habr Career qualification aggregates: middle 177k, senior 303k, lead 378k RUB/month; role mapping is a planning assumption, not a salary offer."
+  employer_load_factor: 1.6
+  productive_hours_per_month: 120
+  calculation: "hourly_rate = monthly_salary_reference × 1.6 / 120; rounded to tens of RUB"
+blended_hourly_rate: 4000
+rates:
+  - {discipline: "discovery", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "product", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "project_management", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "ux_ui", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "architecture", level: "lead", monthly_salary_reference: 378000, hourly_rate: 5040, confidence: "low"}
+  - {discipline: "frontend", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "backend", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "data", level: "lead", monthly_salary_reference: 378000, hourly_rate: 5040, confidence: "low"}
+  - {discipline: "qa", level: "middle", monthly_salary_reference: 177000, hourly_rate: 2360, confidence: "low"}
+  - {discipline: "security", level: "lead", monthly_salary_reference: 378000, hourly_rate: 5040, confidence: "low"}
+  - {discipline: "devops", level: "senior", monthly_salary_reference: 303000, hourly_rate: 4040, confidence: "low"}
+  - {discipline: "documentation", level: "middle", monthly_salary_reference: 177000, hourly_rate: 2360, confidence: "low"}

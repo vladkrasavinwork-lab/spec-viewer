@@ -1,0 +1,33 @@
+schema_version: "1.0"
+profile_id: "ai-development-subscriptions-2026"
+currency: "USD"
+retrieved_at: "2026-07-16"
+valid_until: "2026-08-16"
+subscriptions:
+  - id: "chatgpt-business-monthly"
+    product: "ChatGPT Business with Codex"
+    plan: "Business monthly"
+    billing_unit: "user_month"
+    unit_price: 25
+    default_quantity: 5
+    selected: true
+    source_url: "https://openai.com/business/pricing/"
+    source_date: "2026-07-16"
+  - id: "github-copilot-pro"
+    product: "GitHub Copilot"
+    plan: "Pro"
+    billing_unit: "user_month"
+    unit_price: 10
+    default_quantity: 5
+    selected: false
+    source_url: "https://github.com/features/copilot/plans"
+    source_date: "2026-07-16"
+  - id: "github-copilot-pro-plus"
+    product: "GitHub Copilot"
+    plan: "Pro+"
+    billing_unit: "user_month"
+    unit_price: 39
+    default_quantity: 5
+    selected: false
+    source_url: "https://github.com/features/copilot/plans"
+    source_date: "2026-07-16"

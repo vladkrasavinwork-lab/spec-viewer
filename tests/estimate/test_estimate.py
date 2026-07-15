@@ -109,6 +109,69 @@ def _write_valid_estimate(run: Path) -> None:
     )
 
 
+def _configure_rates_profile(workspace: Path, repository: Path) -> Path:
+    profile = repository / "profiles/team/test-rates.yaml"
+    profile.parent.mkdir(parents=True)
+    profile.write_text(
+        yaml.safe_dump(
+            {
+                "schema_version": "1.0",
+                "profile_id": "test-rates",
+                "currency": "RUB",
+                "region": "Test",
+                "retrieved_at": "2026-07-16",
+                "valid_until": "2099-12-31",
+                "cost_basis": "loaded_internal_cost",
+                "methodology": {
+                    "salary_source_url": "https://example.test/salaries",
+                    "salary_source_note": "Synthetic test rate.",
+                    "employer_load_factor": 1.5,
+                    "productive_hours_per_month": 120,
+                    "calculation": "synthetic monthly salary × load / hours",
+                },
+                "blended_hourly_rate": 4000,
+                "rates": [
+                    {
+                        "discipline": "backend",
+                        "level": "senior",
+                        "monthly_salary_reference": 320000,
+                        "hourly_rate": 4000,
+                        "confidence": "medium",
+                    }
+                ],
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    inputs_path = workspace / "context/estimation-inputs.yaml"
+    inputs = load_document(inputs_path)
+    inputs["cost_profiles"]["development_rates"] = "profiles/team/test-rates.yaml"
+    inputs_path.write_text(yaml.safe_dump(inputs, sort_keys=False), encoding="utf-8")
+    return profile
+
+
+def _apply_profile_costs(run: Path) -> None:
+    summary = load_document(run / "estimate-summary.yaml")
+    summary["development_cost"] = {
+        "currency": "RUB",
+        "profile_id": "test-rates",
+        "amount_range": {"minimum": 80000, "expected": 136000, "maximum": 232000},
+        "formula": "AI-assisted effort × 4000 RUB/hour",
+    }
+    (run / "estimate-summary.yaml").write_text(
+        yaml.safe_dump(summary, sort_keys=False), encoding="utf-8"
+    )
+    support = load_document(run / "support-model.yaml")
+    support["currency"] = "RUB"
+    support["rates_profile_id"] = "test-rates"
+    for level in support["levels"]:
+        level["engineering_cost_range"] = {"minimum": 0, "expected": 0, "maximum": 0}
+    (run / "support-model.yaml").write_text(
+        yaml.safe_dump(support, sort_keys=False), encoding="utf-8"
+    )
+
+
 def test_prepare_and_finalize_estimate(isolated_repository: Path, tmp_path: Path) -> None:
     workspace = _workspace(isolated_repository, tmp_path)
     relative = prepare_estimate(workspace, isolated_repository, ESTIMATE_ID)
@@ -191,4 +254,28 @@ def test_rejects_unordered_effort_range(isolated_repository: Path, tmp_path: Pat
     (run / "estimate-summary.yaml").write_text(yaml.safe_dump(summary), encoding="utf-8")
 
     with pytest.raises(SpecViewerError, match="range must be ordered"):
+        finalize_estimate(workspace, run, isolated_repository)
+
+
+def test_profile_driven_costs_are_validated(isolated_repository: Path, tmp_path: Path) -> None:
+    workspace = _workspace(isolated_repository, tmp_path)
+    _configure_rates_profile(workspace, isolated_repository)
+    run = workspace / prepare_estimate(workspace, isolated_repository, ESTIMATE_ID)
+    _write_valid_estimate(run)
+    _apply_profile_costs(run)
+
+    finalize_estimate(workspace, run, isolated_repository)
+
+    assert load_document(run / "run-metadata.yaml")["status"] == "completed"
+
+
+def test_rejects_changed_cost_profile(isolated_repository: Path, tmp_path: Path) -> None:
+    workspace = _workspace(isolated_repository, tmp_path)
+    profile = _configure_rates_profile(workspace, isolated_repository)
+    run = workspace / prepare_estimate(workspace, isolated_repository, ESTIMATE_ID)
+    _write_valid_estimate(run)
+    _apply_profile_costs(run)
+    profile.write_text(profile.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+
+    with pytest.raises(SpecViewerError, match="Cost profile changed"):
         finalize_estimate(workspace, run, isolated_repository)

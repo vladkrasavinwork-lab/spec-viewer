@@ -2,6 +2,7 @@ schema_version: "1.0"
 run_id: "20000101T000000Z-estimate"
 mode: "provider_neutral"
 currency: null
+profile_id: null
 scenarios:
   - {name: prototype, load_assumption: "load not provided", resources: [], monthly_total_range: null}
   - {name: small_production, load_assumption: "load not provided", resources: [], monthly_total_range: null}

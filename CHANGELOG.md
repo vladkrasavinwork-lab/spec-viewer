@@ -14,6 +14,8 @@ versioning.
 - Working `product-delivery-estimate` skill with three-point work breakdowns, per-item AI impact,
   calendar and operating scenarios, pricing guardrails, immutable runs, schemas, and tests.
 - Public synthetic workspace example under `examples/`; real `workspaces/` remain ignored.
+- Dated cost profiles for loaded team rates, Yandex Cloud resources, and AI-development
+  subscriptions, with schema, expiry, provenance, hash, and arithmetic validation.
 
 ### Changed
 

@@ -32,6 +32,18 @@ CASES = (
         "templates/estimate/infrastructure-scenarios.yaml",
     ),
     ("support-model.schema.json", "templates/estimate/support-model.yaml"),
+    (
+        "development-rates-profile.schema.json",
+        "profiles/team/russia-standard-2026.yaml",
+    ),
+    (
+        "infrastructure-prices-profile.schema.json",
+        "profiles/operations/yandex-cloud-russia-2026.yaml",
+    ),
+    (
+        "tool-subscriptions-profile.schema.json",
+        "profiles/operations/ai-development-subscriptions-2026.yaml",
+    ),
     ("example-classification.schema.json", "templates/examples/classification.yaml"),
 )
 

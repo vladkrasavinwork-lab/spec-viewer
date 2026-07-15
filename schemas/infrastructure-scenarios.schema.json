@@ -8,6 +8,7 @@
     "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-estimate$"},
     "mode": {"enum": ["provider_neutral", "provider_specific"]},
     "currency": {"type": ["string", "null"]},
+    "profile_id": {"type": ["string", "null"]},
     "scenarios": {
       "type": "array", "minItems": 4,
       "items": {
@@ -27,6 +28,7 @@
                 "unit": {"type": "string", "minLength": 1},
                 "formula": {"type": "string", "minLength": 1},
                 "amount_range": {"anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]},
+                "price_id": {"type": ["string", "null"]},
                 "price_source": {"type": ["string", "null"]},
                 "price_date": {"type": ["string", "null"], "format": "date"}
               }
