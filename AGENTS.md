@@ -12,4 +12,5 @@
 - Update `CHANGELOG.md` for user-visible changes.
 - Keep each future skill focused on one responsibility.
 - Keep review evidence-based and schema-valid; never hardcode or simulate AI findings in tooling.
-- Rewrite and estimation remain out of scope until their dedicated stages are implemented.
+- Keep rewrite changes traceable; never turn unanswered decisions or assumptions into requirements.
+- Delivery estimation remains out of scope until its dedicated stage is implemented.

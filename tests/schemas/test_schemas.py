@@ -17,7 +17,12 @@ CASES = (
     ("review-summary.schema.json", "templates/review/review-summary.yaml"),
     ("issue-register.schema.json", "templates/review/issue-register.yaml"),
     ("clarification-register.schema.json", None),
-    ("assumption-register.schema.json", None),
+    ("assumption-register.schema.json", "templates/rewrite/assumption-register.yaml"),
+    ("change-register.schema.json", "templates/rewrite/change-register.yaml"),
+    (
+        "requirement-traceability.schema.json",
+        "templates/rewrite/requirement-traceability.yaml",
+    ),
     ("example-classification.schema.json", "templates/examples/classification.yaml"),
 )
 
@@ -25,8 +30,6 @@ CASES = (
 def _minimal(name: str) -> dict[str, Any]:
     if name == "clarification-register.schema.json":
         return {"schema_version": "1.0", "questions": []}
-    if name == "assumption-register.schema.json":
-        return {"schema_version": "1.0", "assumptions": []}
     raise AssertionError(name)
 
 

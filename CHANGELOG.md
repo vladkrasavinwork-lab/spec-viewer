@@ -9,6 +9,9 @@ versioning.
 
 - Deterministic Markdown, DOCX, and text-PDF normalization with source hashes and warnings.
 - Working `product-spec-review` skill, review schemas, templates, lifecycle commands, and tests.
+- Working `product-spec-rewrite` skill with three modes, provenance, blocking-question enforcement,
+  immutable runs, change/assumption/traceability schemas, templates, and tests.
+- Public synthetic workspace example under `examples/`; real `workspaces/` remain ignored.
 
 ### Changed
 

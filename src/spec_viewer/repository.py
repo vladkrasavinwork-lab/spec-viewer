@@ -20,6 +20,15 @@ STRUCTURED_FILES = (
         "schemas/clarification-register.schema.json",
         "templates/review/clarification-register.yaml",
     ),
+    ("schemas/change-register.schema.json", "templates/rewrite/change-register.yaml"),
+    (
+        "schemas/assumption-register.schema.json",
+        "templates/rewrite/assumption-register.yaml",
+    ),
+    (
+        "schemas/requirement-traceability.schema.json",
+        "templates/rewrite/requirement-traceability.yaml",
+    ),
     ("schemas/example-classification.schema.json", "templates/examples/classification.yaml"),
     (
         "schemas/example-classification.schema.json",
@@ -29,6 +38,14 @@ STRUCTURED_FILES = (
     (
         "schemas/document-metadata.schema.json",
         "examples/synthetic-foundation-example/document-metadata.yaml",
+    ),
+    (
+        "schemas/project.schema.json",
+        "examples/synthetic-workspace-example/workspace/project.yaml",
+    ),
+    (
+        "schemas/document-metadata.schema.json",
+        "examples/synthetic-workspace-example/workspace/normalized/document-metadata.yaml",
     ),
 )
 SKILLS = ("product-spec-review", "product-spec-rewrite", "product-delivery-estimate")
@@ -50,7 +67,7 @@ def validate_repository(repository_root: Path) -> None:
     for skill in SKILLS:
         validate_skill_frontmatter(
             repository_root / ".agents/skills" / skill / "SKILL.md",
-            require_placeholder=skill != "product-spec-review",
+            require_placeholder=skill == "product-delivery-estimate",
         )
     examples = [path for path in (repository_root / "examples").iterdir() if path.is_dir()]
     for example in examples:

@@ -12,6 +12,7 @@ from .normalization import normalize_document
 from .privacy import privacy_check
 from .repository import validate_repository
 from .review import finalize_review, prepare_review
+from .rewrite import finalize_rewrite, prepare_rewrite
 from .runs import create_run
 from .schema import validate_file
 from .workspace import init_workspace, validate_workspace
@@ -24,6 +25,7 @@ repository_app = typer.Typer(help="Validate repository contracts.")
 privacy_app = typer.Typer(help="Check tracked paths and probable secrets.")
 document_app = typer.Typer(help="Normalize source documents.")
 review_app = typer.Typer(help="Prepare and finalize specification review runs.")
+rewrite_app = typer.Typer(help="Prepare and finalize traceable specification rewrites.")
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(run_app, name="run")
 app.add_typer(schema_app, name="schema")
@@ -31,6 +33,7 @@ app.add_typer(repository_app, name="repository")
 app.add_typer(privacy_app, name="privacy")
 app.add_typer(document_app, name="document")
 app.add_typer(review_app, name="review")
+app.add_typer(rewrite_app, name="rewrite")
 
 
 def _root() -> Path:
@@ -99,6 +102,22 @@ def review_prepare(workspace: Path, run_id: str | None = None) -> None:
 def review_finalize(workspace: Path, run: Path) -> None:
     """Validate and complete an AI-authored review run."""
     _run(lambda: finalize_review(workspace.resolve(), run.resolve(), _root()))
+
+
+@rewrite_app.command("prepare")
+def rewrite_prepare(
+    workspace: Path,
+    mode: str = "conservative",
+    run_id: str | None = None,
+) -> None:
+    """Create a running rewrite with traceable artifact templates."""
+    _run(lambda: prepare_rewrite(workspace.resolve(), _root(), mode, run_id))
+
+
+@rewrite_app.command("finalize")
+def rewrite_finalize(workspace: Path, run: Path) -> None:
+    """Validate and complete an AI-authored specification rewrite."""
+    _run(lambda: finalize_rewrite(workspace.resolve(), run.resolve(), _root()))
 
 
 if __name__ == "__main__":

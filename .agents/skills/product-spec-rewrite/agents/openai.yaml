@@ -1,4 +1,4 @@
 interface:
   display_name: "Product Spec Rewrite"
-  short_description: "Revise specifications from confirmed inputs"
-  default_prompt: "Use $product-spec-rewrite to revise this specification using confirmed answers and findings."
+  short_description: "Rewrite specifications with full traceability"
+  default_prompt: "Use $product-spec-rewrite to revise this reviewed specification from confirmed answers without inventing decisions."

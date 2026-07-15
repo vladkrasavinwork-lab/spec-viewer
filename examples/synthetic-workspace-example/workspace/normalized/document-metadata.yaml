@@ -1,0 +1,13 @@
+schema_version: "1.0"
+document_id: "DOC-TEA-DEMO"
+title: "Fictional Tea Timer"
+document_type: "product_specification"
+source_format: "markdown"
+source_language: "en"
+normalized_language: "en"
+source_filename: "specification.md"
+source_hash: "c1b56f68ac394cbc12dbb3435e1ffea203a17695cd279480e93faa12cf6eea86"
+converted_at: "2026-07-16T00:00:00Z"
+conversion_status: "completed"
+converter_version: "spec-viewer/0.3.0"
+warnings_count: 0

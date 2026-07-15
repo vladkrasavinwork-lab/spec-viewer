@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "mode", "changes"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-rewrite$"},
+    "mode": {"enum": ["conservative", "structured", "implementation-ready"]},
+    "changes": {"type": "array", "items": {"$ref": "#/$defs/change"}}
+  },
+  "$defs": {
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "affected_section", "source_issue_ids", "change_type", "before", "after", "rationale", "confidence", "confirmation_status", "answer_ids", "assumption_ids", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CHANGE-[0-9]{3,}$"},
+        "affected_section": {"type": "string", "minLength": 1},
+        "source_issue_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^ISSUE-[0-9]{3,}$"}},
+        "change_type": {"enum": ["editorial", "derived", "confirmed_decision"]},
+        "before": {"type": ["string", "null"]},
+        "after": {"type": ["string", "null"]},
+        "rationale": {"type": "string", "minLength": 1},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "confirmation_status": {"enum": ["not_required", "confirmed", "unconfirmed"]},
+        "answer_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^Q-[0-9]{3,}$"}},
+        "assumption_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^(ASM|ASSUMPTION)-[0-9]{3,}$"}},
+        "status": {"enum": ["applied", "deferred", "rejected"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"change_type": {"const": "confirmed_decision"}}}, "then": {"properties": {"answer_ids": {"minItems": 1}, "confirmation_status": {"const": "confirmed"}}}},
+        {"if": {"properties": {"change_type": {"const": "editorial"}}}, "then": {"properties": {"confirmation_status": {"const": "not_required"}}}}
+      ]
+    }
+  }
+}

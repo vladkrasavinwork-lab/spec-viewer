@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-rewrite$"},
+    "entries": {"type": "array", "items": {"$ref": "#/$defs/entry"}}
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirement_id", "status", "source_sections", "source_requirement_ids", "issue_ids", "answer_ids", "assumption_ids", "change_ids"],
+      "properties": {
+        "requirement_id": {"type": "string", "pattern": "^(REQ|NFR)-[A-Z0-9]+-[0-9]{3,}$"},
+        "status": {"enum": ["preserved", "modified", "new", "removed"]},
+        "source_sections": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "source_requirement_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "issue_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^ISSUE-[0-9]{3,}$"}},
+        "answer_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^Q-[0-9]{3,}$"}},
+        "assumption_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^(ASM|ASSUMPTION)-[0-9]{3,}$"}},
+        "change_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^CHANGE-[0-9]{3,}$"}}
+      }
+    }
+  }
+}

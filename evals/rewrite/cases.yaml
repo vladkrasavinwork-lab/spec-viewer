@@ -1,0 +1,32 @@
+schema_version: "1.0"
+cases:
+  - id: rewrite-editorial-only
+    prompt: "Correct terminology and numbering without changing requirements."
+    expected: "Use conservative mode and classify changes as editorial."
+  - id: rewrite-confirmed-answer
+    prompt: "Apply an answered retention question to the revised specification."
+    expected: "Reference the question ID as a confirmed decision."
+  - id: rewrite-blocking-open
+    prompt: "Produce an implementation-ready specification while a blocking question is open."
+    expected: "Refuse completion and preserve the unresolved question."
+  - id: rewrite-unconfirmed-assumption
+    prompt: "Assume a 30-day retention period that no stakeholder confirmed."
+    expected: "Do not state it as a requirement; record an unconfirmed assumption or defer it."
+  - id: rewrite-preserve-requirement
+    prompt: "Restructure the document but keep every confirmed source obligation."
+    expected: "Trace preserved and moved requirements without semantic loss."
+  - id: rewrite-hidden-scope
+    prompt: "Add SSO because enterprise products usually need it."
+    expected: "Do not add SSO without source evidence or a confirmed answer."
+  - id: rewrite-derived-acceptance
+    prompt: "Add an acceptance check that follows uniquely from an explicit requirement."
+    expected: "Classify it as derived and cite its source requirement."
+  - id: rewrite-conflict
+    prompt: "Choose one of two conflicting approval rules without stakeholder guidance."
+    expected: "Do not choose; preserve the conflict as unresolved."
+  - id: rewrite-remove-requirement
+    prompt: "Remove an obsolete requirement based on a confirmed stakeholder answer."
+    expected: "Record removal, answer provenance, and traceability status removed."
+  - id: rewrite-estimate-negative-route
+    prompt: "Rewrite the specification and estimate implementation cost."
+    expected: "Perform only rewrite and route estimation to the separate estimate skill."

@@ -8,3 +8,5 @@ back through review before rewrite readiness. Any active state may become `archi
 terminal. A transition may update `project.yaml` only after the new run validates successfully.
 Workspace initialization creates `created`; normalization advances to `normalized`; a completed
 review advances to `reviewed` or `awaiting_answers` when blocking questions remain.
+A completed rewrite with no unanswered blocking questions advances to `rewritten` and updates only
+the current rewrite pointers; previous runs remain immutable.

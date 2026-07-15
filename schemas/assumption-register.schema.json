@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "assumptions"], "properties": {"schema_version": {"const": "1.0"}, "assumptions": {"type": "array", "items": {"$ref": "#/$defs/assumption"}}},
+  "required": ["schema_version", "assumptions"], "properties": {"schema_version": {"const": "1.0"}, "run_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z-rewrite$"}, "assumptions": {"type": "array", "items": {"$ref": "#/$defs/assumption"}}},
   "$defs": {"assumption": {"type": "object", "additionalProperties": false, "required": ["id", "statement", "reason", "impact", "owner", "status", "source_ids", "confirmation"], "properties": {
-    "id": {"type": "string", "pattern": "^ASM-[0-9]{3,}$"}, "statement": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1},
-    "impact": {"type": "string", "minLength": 1}, "owner": {"type": ["string", "null"]}, "status": {"enum": ["unconfirmed", "confirmed", "rejected", "superseded"]},
+    "id": {"type": "string", "pattern": "^(ASM|ASSUMPTION)-[0-9]{3,}$"}, "statement": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1},
+    "impact": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}]}, "owner": {"type": ["string", "null"]}, "status": {"enum": ["unconfirmed", "confirmed", "rejected", "superseded"]},
     "source_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "confirmation": {"anyOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["confirmed_by", "confirmed_at"], "properties": {"confirmed_by": {"type": "string"}, "confirmed_at": {"type": "string", "format": "date-time"}}}]}
   }}}
 }
